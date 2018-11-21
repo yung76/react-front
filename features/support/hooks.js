@@ -2,7 +2,7 @@ const { After, Before, AfterAll, setDefaultTimeout } = require('cucumber');
 const { driver } = require('./web_driver');
 
 //set default step timeout
-setDefaultTimeout(60 * 1000);
+setDefaultTimeout(120 * 1000);
 
 Before(function() {
     //Before Scenario hook
