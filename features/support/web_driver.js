@@ -7,3 +7,5 @@ var driver_fx = new webdriver.Builder()
     .build();
 
 exports.driver = driver_fx;
+exports.By = By;
+exports.until = until;
