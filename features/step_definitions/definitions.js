@@ -28,7 +28,7 @@ Then(/^click in label quality assurance$/, async function () {
 
 Then(/^looking for list details jobs$/, async function() {
     
-  return driver.wait(until.elementLocated(By.xpath("//div[@class='Expandable-toggle is-active']")),130000).then(
+  return driver.wait(until.elementLocated(By.xpath("//div[@class='Expandable-toggle is-active']")) ).then(
     function(){
         var checl_list = driver.findElement(By.xpath("//div[@class='Expandable-toggle is-active']"));
         checl_list.getText().then(function(text) {
