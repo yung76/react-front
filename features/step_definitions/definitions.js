@@ -21,28 +21,25 @@ Then(/^click in label quality assurance$/, async function () {
   });
 
   jobs.click().then(function () {
-    console.log("Cliked ")
+    console.log("Cliked in quality assurances")
   });
 
 });
 
 Then(/^looking for list details jobs$/, async function() {
-    
-  return driver.wait(until.elementLocated(By.xpath("//div[@class='Expandable-toggle is-active']")) ).then(
-    function(){
-        var checl_list = driver.findElement(By.xpath("//div[@class='Expandable-toggle is-active']"));
-        checl_list.getText().then(function(text) {
-          console.log("encontre la lista");
-          console.info(text);
-        });
-
+return driver.wait(until.elementLocated(By.xpath("//div[@class='Expandable-toggle is-active']")) ).then(function(){
+    var checl_list = driver.findElement(By.xpath("//div[@class='Expandable-toggle is-active']"));
+    checl_list.getText().then(function(text) {
+      console.log("encontre la lista");
+      console.info(text);
     });
 
-  //     check_list.getText().then(function(text) {
-  //     console.info(text);
-  //     assert.equal(text,'Quality Assurance');
-  //  });
+  });
 
- //var list_jobs = driver.findElements({xpath: "//div[contains(@data-group,'quality')]//div[contains(@class,'Table-column Table-headline is-wrapped is-firstMobile')]"});
+//   var list_jobs = driver.findElements({xpath: "//div[contains(@data-group,'quality')]//div[contains(@class,'Table-column Table-headline is-wrapped is-firstMobile')]"});
+//   list_jobs.getText().then(function(text) {
+//   console.info(text);
+// //      assert.equal(text,'Quality Assurance');
+// });
  //list_jobs.then(found => console.log('elements found? %s', !!found.leght));
 });
