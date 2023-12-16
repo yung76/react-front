@@ -8,8 +8,31 @@ import { show_alerta } from '../functions';
 const ShowArticles = () => {
     const url = 'http://192.168.1.14:8000/';
     const [articles, setArticles] = useState([]);
+    const [id,setId] = useState('');
     const [title,setTitle] = useState('');
+    const [pageName,setPageName] = useState('');
     const [body,setBody] = useState('');
+    const [operation,setOperation] = useState('1');
+
+    const openModal = (op, id, title, body) =>{
+        setId('');
+        setTitle('');
+        setBody('');
+        setOperation(op);
+        if (op === 1) {
+            setPageName('Registrar Articulo')
+        }
+        else if (op === 2 ) {
+            setPageName('Editar Articulo');
+            setId(id);
+            setTitle(title);
+            setBody(body);
+        }
+        window.setTimeout(function(){
+            document.getElementById('title').focus();
+        },500);
+        
+    }
 
     useEffect(()=>{
         getArticles();
@@ -26,7 +49,7 @@ const ShowArticles = () => {
         <div className='row mt-3'>
             <div className='col-md-4 offset-4'>
                 <div className='d-grid mx-auto'>
-                    <button className='btn btn-dark' data-bs-toggle='modal' data-bs-target='#modalArticles'>
+                    <button onClick={()=>openModal(1)} className='btn btn-dark' data-bs-toggle='modal' data-bs-target='#modalArticles'>
                         <i className='fa-solid fa-circle-plus'></i> Añadir
                     </button>
                 </div>
@@ -46,7 +69,8 @@ const ShowArticles = () => {
                                     <td>{article.attributes.title}</td>
                                     <td>{article.attributes.body}</td>
                                     <td>
-                                        <button className='btn btn-warning'>
+                                        <button onClick={()=>openModal(2, article.id, article.attributes.title,article.attributes.body)} 
+                                            className='btn btn-warning' data-bs-toggle='modal' data-bs-target='#modalArticles'>
                                             <i className='fa-solid fa-edit'></i>
                                         </button>
                                         &nbsp;
@@ -66,7 +90,7 @@ const ShowArticles = () => {
         <div className='modal-dialog'>
             <div className='modal-content'>
                 <div className='modal-header'>
-                    <label className='h5'>{title}</label>
+                    <label className='h5'>{pageName}</label>
                     <button type='button' className='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
                 </div>
                 <div className='modal-body'>
