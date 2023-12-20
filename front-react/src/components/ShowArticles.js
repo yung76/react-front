@@ -7,12 +7,14 @@ import { show_alerta } from '../functions';
 
 const ShowArticles = () => {
     const url = 'http://192.168.1.14:8000/';
+    const urlAddArticle = 'http://192.168.1.14:8000/articles';
     const [articles, setArticles] = useState([]);
     const [id,setId] = useState('');
     const [title,setTitle] = useState('');
     const [pageName,setPageName] = useState('');
     const [body,setBody] = useState('');
     const [operation,setOperation] = useState('1');
+    const [authenticityToken, setAuthenticityToken] = useState('');
 
     const openModal = (op, id, title, body) =>{
         setId('');
@@ -37,6 +39,12 @@ const ShowArticles = () => {
     const validar = () => {
         var parametros;
         var metodo;
+
+        const csrfToken = document.cookie.match(/csrf_token=([^;]*)/);
+        if (csrfToken) {
+            setAuthenticityToken(csrfToken[1]);
+        }
+
         if (title.trim() === '') {
             show_alerta('Escribe el titulo', 'warning');
         }
@@ -45,7 +53,7 @@ const ShowArticles = () => {
         }
         else{
             if (operation === 1) {
-                parametros = {title:title.trim(),body:body.trim()};
+                parametros = {authenticity_token:authenticityToken,title:title.trim(),body:body.trim()};
                 metodo = 'POST';
             }
             else {
@@ -57,7 +65,7 @@ const ShowArticles = () => {
     }
     
     const enviarSolicitud = async (metodo, parametros) => {
-        await axios({method:metodo, url:url, data:parametros}).then(function(respuesta){
+        await axios({method:metodo, url:urlAddArticle, data:parametros}).then(function(respuesta){
             var tipo = respuesta.data[0];
             var msj = respuesta.data[1];
             show_alerta(tipo,msj);
