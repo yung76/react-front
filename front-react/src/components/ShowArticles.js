@@ -8,6 +8,8 @@ import { show_alerta } from '../functions';
 const ShowArticles = () => {
     const url = 'http://192.168.1.14:8000/';
     const urlAddArticle = 'http://192.168.1.14:8000/articles';
+    //const urlUpdateArticle = 'http://192.168.1.14:8000/articles/';
+    const [urlUpdateArticle,setUrlUpdateArticle] = useState('');
     const [articles, setArticles] = useState([]);
     const [id,setId] = useState('');
     const [title,setTitle] = useState('');
@@ -39,11 +41,8 @@ const ShowArticles = () => {
     const validar = () => {
         var parametros;
         var metodo;
+        
 
-        const csrfToken = document.cookie.match(/csrf_token=([^;]*)/);
-        if (csrfToken) {
-            setAuthenticityToken(csrfToken[1]);
-        }
 
         if (title.trim() === '') {
             show_alerta('Escribe el titulo', 'warning');
@@ -53,11 +52,11 @@ const ShowArticles = () => {
         }
         else{
             if (operation === 1) {
-                parametros = {authenticity_token:authenticityToken,title:title.trim(),body:body.trim()};
+                parametros = {title:title.trim(),body:body.trim()};
                 metodo = 'POST';
             }
             else {
-                parametros = {id:id,title:title.trim(),body:body.trim()};
+                parametros = {title:title.trim(),body:body.trim()};
                 metodo = 'PUT';
             }
             enviarSolicitud(metodo, parametros);
@@ -65,19 +64,40 @@ const ShowArticles = () => {
     }
     
     const enviarSolicitud = async (metodo, parametros) => {
-        await axios({method:metodo, url:urlAddArticle, data:parametros}).then(function(respuesta){
-            var tipo = respuesta.data[0];
-            var msj = respuesta.data[1];
-            show_alerta(tipo,msj);
-            if (tipo === 'success') {
-                document.getElementById('btnCerrar').click();
-                getArticles();
-            }
-        })
-        .catch(function(error){
-            show_alerta('Error en la solicitud', 'error');
-            console.log(error);
-        });
+        var urlAll ;
+        if (operation === 1 ) {
+            urlAll = 'http://192.168.1.14:8000/articles';
+            console.log("----url " +urlUpdateArticle);
+        }
+        else{
+            urlAll = 'http://192.168.1.14:8000/articles/'+id;
+            console.log("----url " +urlAll);
+        }
+            await axios({method:metodo, url:urlAll, data:parametros}).then(function(respuesta){
+                var tipo = respuesta.status;
+                var msj = respuesta.data[1];
+                console.log("----" +tipo);
+                console.log("----asd " +msj);
+                console.log("----url " +urlUpdateArticle);
+                //show_alerta(msj,tipo);
+               
+                    if (tipo == 200) {
+                        show_alerta("Operacion = "+operation+" Status = "+tipo,'success');
+                        document.getElementById('btnCerrar').click();       
+                        getArticles();
+                    
+                    } else if (tipo == 204) {
+                        show_alerta("Operacion = "+operation+" Status = "+tipo,'success');
+                        document.getElementById('btnCerrar').click();       
+                        getArticles();
+                    }
+               
+            })
+            .catch(function(error){
+                show_alerta('Error en la solicitud', 'error');
+                console.log(error);
+            });
+
     }
 
     useEffect(()=>{
@@ -158,7 +178,7 @@ const ShowArticles = () => {
                     </div>
                 </div>
                 <div className='modal-footer'>
-                    <button id='btnCerrar' type='button' className='btn btn-secondary' data-bs-dismiss='modal'>Cerrar</button>
+                    <button type='button' id='btnCerrar' className='btn btn-secondary' data-bs-dismiss='modal'>Cerrar</button>
                 </div>
             </div>
         </div>
