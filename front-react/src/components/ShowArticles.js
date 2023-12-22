@@ -71,14 +71,14 @@ const ShowArticles = () => {
         }
         else{
             urlAll = 'http://192.168.1.14:8000/articles/'+id;
-            console.log("----url " +urlAll);
+            console.log("1----url " +urlAll);
         }
             await axios({method:metodo, url:urlAll, data:parametros}).then(function(respuesta){
                 var tipo = respuesta.status;
                 var msj = respuesta.data[1];
                 console.log("----" +tipo);
                 console.log("----asd " +msj);
-                console.log("----url " +urlUpdateArticle);
+                console.log("2----url " +urlUpdateArticle);
                 //show_alerta(msj,tipo);
                
                     if (tipo == 200) {
@@ -99,6 +99,23 @@ const ShowArticles = () => {
             });
 
     }
+
+const deleteArticle = (id) => {
+    const MySwal = withReactContent(Swal);
+    MySwal.fire({
+        title:'¿Seguro de eliminar el articulo id = '+ id +' ?',
+        icon: 'question', text:'No se podra dar marcha a atras',
+        showCancelButton:true, confirmButtonText: 'Si, eliminar', cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            setId(id);
+            enviarSolicitud('DELETE',{id:id})
+        }
+        else{
+            show_alerta('El Articulo no fue eliminado', 'info');
+        }
+    });
+} 
 
     useEffect(()=>{
         getArticles();
@@ -140,7 +157,7 @@ const ShowArticles = () => {
                                             <i className='fa-solid fa-edit'></i>
                                         </button>
                                         &nbsp;
-                                        <button className='btn btn-danger'>
+                                        <button onClick={()=>deleteArticle(article.id)} className='btn btn-danger'>
                                             <i className='fa-solid fa-trash'></i>
                                         </button>
                                     </td>
